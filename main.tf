@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket = "terraform-test12345678"
+    key    = "terraform.tfstate"
+    region = "us-east-1"
+  }
+}
+
+
 # Data source to get the AMI ID for Amazon Linux 2
 data "aws_ami" "amzlinux2" {
   most_recent = true
