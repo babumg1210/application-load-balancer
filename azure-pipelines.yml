@@ -9,11 +9,39 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+stages:
+  - stage: 
+    jobs:
+      - job: init
+        steps:
+        - task: TerraformInstaller@0
+          inputs:
+            terraformVersion: '1.0.0' # Specify the desired Terraform version
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'aws'
+            command: 'init'
+            backendServiceAWS: 'aws-sc'
+            backendAWSBucketName: 'mytestapplication1234'
+            backendAWSKey: 'terraform.tfstate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/application-load-balancer/'
+
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'aws'
+            backendServiceAWS: 'aws-sc'
+            command: 'validate'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/application-load-balancer'
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'aws'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/aws-practice/modules'
+            environmentServiceNameAWS: 'aws-sc'
+        - task: TerraformTaskV4@4
+          inputs:
+            provider: 'aws'
+            command: 'apply'
+            environmentServiceNameAWS: 'aws-sc'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/aws-practice/modules'
