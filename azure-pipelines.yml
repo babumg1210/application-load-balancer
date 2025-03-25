@@ -37,11 +37,11 @@ stages:
           inputs:
             provider: 'aws'
             command: 'plan'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/aws-practice/modules'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/application-load-balancer'
             environmentServiceNameAWS: 'aws-sc'
         - task: TerraformTaskV4@4
           inputs:
             provider: 'aws'
             command: 'apply'
             environmentServiceNameAWS: 'aws-sc'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/aws-practice/modules'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/application-load-balancer'
